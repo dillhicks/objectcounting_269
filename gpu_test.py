@@ -1,17 +1,19 @@
-
-# What version of Python do you have?
 import sys
-
-import tensorflow.keras
 import pandas as pd
 import sklearn as sk
-import tensorflow as tf
+import torch 
 
-print(f"Tensor Flow Version: {tf.__version__}")
-print(f"Keras Version: {tensorflow.keras.__version__}")
-print()
-print(f"Python {sys.version}")
-print(f"Pandas {pd.__version__}")
-print(f"Scikit-Learn {sk.__version__}")
-gpu = len(tf.config.list_physical_devices('GPU'))>0
-print("GPU is", "available" if gpu else "NOT AVAILABLE")
+def get_device():
+
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print('Using device:', device)
+    print()
+
+    #Additional Info when using cuda
+    if device.type == 'cuda':
+        print(torch.cuda.get_device_name(0))
+        print('Memory Usage:')
+        print('Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
+        print('Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
+
+    return device
