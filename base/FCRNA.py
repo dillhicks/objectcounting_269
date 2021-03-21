@@ -44,7 +44,7 @@ class FCRN_A(nn.Module):
     Regression Networks'
     """
 
-    def __init__(self, N: int=1, input_filters: int=3, **kwargs):
+    def __init__(self, criterion, N: int=1, input_filters: int=3, **kwargs):
         """
         Create FCRN-A model with:
             * fixed kernel size = (3, 3)
@@ -56,6 +56,7 @@ class FCRN_A(nn.Module):
             input_filters: no. of input channels
         """
         super(FCRN_A, self).__init__()
+        self._criterion = criterion
         self.model = nn.Sequential(
             # downsampling
             conv_block(channels=(input_filters, 32), size=(3, 3), N=N),
@@ -84,3 +85,13 @@ class FCRN_A(nn.Module):
     def forward(self, input: torch.Tensor):
         """Forward pass."""
         return self.model(input)
+
+
+    def new(self):
+        model_new = FCRN_A(self._criterion).cuda()
+        return model_new
+
+
+    def _loss(self, input, target):
+        logits = self(input)
+        return self._criterion(logits, target) 
