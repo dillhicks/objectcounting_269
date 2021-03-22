@@ -1,7 +1,7 @@
 
 from .base import BaseNet
 from .fcn import FCNHead
-from util.functional import *
+from lbt.util.functional import *
 from torch.nn.functional import interpolate
 
 import torch
@@ -87,6 +87,7 @@ class UNET(BaseNet):
     def __init__(
         self,
         nclass,
+        criterion = None,
         in_channels=3,
         aux=True,
         channel_scale=1,
@@ -94,6 +95,7 @@ class UNET(BaseNet):
     ):
         super(UNET, self).__init__(nclass, aux, norm_layer=nn.BatchNorm2d, **kwargs)
 
+        self._criterion = criterion
         self.predownsample_block = nn.MaxPool2d(kernel_size=2, stride=2)
         self.identity_block = nn.Sequential()
         filters = [64, 128, 256, 512, 1024]
@@ -199,7 +201,7 @@ class UNET(BaseNet):
             outputs.append(auxout)
 
         return outputs
-     def new(self):
+    def new(self):
         model_new = UNET(self._criterion).cuda()
         return model_new
 

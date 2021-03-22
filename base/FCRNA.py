@@ -88,7 +88,7 @@ class FCRN_A(nn.Module):
 
 
     def new(self):
-        model_new = FCRN_A(self._criterion).cuda()
+        model_new = FCRN_A(self._criterion, input_filters=3, filters=64, N=2).cuda()
         return model_new
 
 

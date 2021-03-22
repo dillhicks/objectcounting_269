@@ -94,6 +94,7 @@ class Network(nn.Module):
         self._num_classes = num_classes
         self._criterion = criterion
         self._depth = depth
+        self._device = device
 
         self.net = NasUnet(input_c, c, num_classes, depth, meta_node_num,
                                   double_down_channel, use_softmax_head)
@@ -161,7 +162,7 @@ class Network(nn.Module):
         return self._criterion(logits, target)
 
     def new(self):
-        model_new = Network(self._input_c, self._c, self._num_classes, self._criterion, self._depth).cuda()
+        model_new = Network(input_c = self._input_c, c = self._c, num_classes = self._num_classes, criterion = self._criterion, depth = self._depth, device = self._device).cuda()
         for x, y in zip(model_new.arch_parameters(), self.arch_parameters()):
             x.data.copy_(y.data)
         return model_new
